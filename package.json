@@ -2,18 +2,16 @@
   "name": "anupmourya",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "npm install",
-    "start": "node index.js",
-    "preinstall": "npm install -g npm@9.8.1"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "18.18.2",
-    "npm": "9.x"
+    "node": "14.17.0",
+    "npm": "6.x"
   },
   "dependencies": {
     "bcrypt-promise": "^2.0.0",
@@ -25,16 +23,12 @@
     "dotenv": "^16.0.1",
     "ejs": "^3.1.10",
     "express": "^4.18.1",
-    "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "mongoose": "^6.5.0",
     "node-cron": "^3.0.1",
-    "node-gyp": "^9.0.0",
     "nodemailer": "^6.7.7",
-    "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^2.0.18",
     "puppeteer": "^10.4.0",
-    "puppeteer-core": "^10.1.0",
     "request": "^2.88.2",
     "wkhtmltopdf": "^0.4.0"
   }
