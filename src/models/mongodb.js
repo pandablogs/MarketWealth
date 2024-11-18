@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const items = require("./items_model");
+import express from 'express';
+import items from './items_model';
 
 mongoose.set('debug', true);
 
