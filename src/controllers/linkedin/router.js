@@ -1,7 +1,7 @@
-import express from 'express';
-import router from express.Router();
+const express = require('express');
+const router = express.Router();
+const crawl_main = require('./crawl_main');
 
-import crawl_main from './crawl_main';
 module.exports = {
     getMainArticle: crawl_main.getMainArticle
 };

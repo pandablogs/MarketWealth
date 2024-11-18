@@ -1,50 +1,65 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import compression from 'compression';
-import fs from 'fs';
-import path from 'path';
-import dotenv from 'dotenv';
+const express = require('express');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config()
 
-import mongodb from './src/models/mongodb.js';
-import router from './src/controllers/router.js';
 
-dotenv.config();
-
+const mongodb = require("./src/models/mongodb");
+const router = require("./src/controllers/router");
 const app = express();
 const port = process.env.PORT || 3200;
-process.env.NODE_ENV = process.env.NODE_ENV || 'LOCAL';
-console.log('ENV', process.env.NODE_ENV);
+process.env.NODE_ENV = process.env.NODE_ENV || 'LOCAL'
+console.log('ENV', process.env.NODE_ENV)
 
-// Middleware
+
+//import File 
 app.use(bodyParser.json());
-app.use(compression());
-app.use(express.static(path.resolve(process.cwd(), 'build')));
+//Access Fornt-end code
+app.use(compression());//add this as the 1st middleware
+app.use(express.static(path.resolve(__dirname, 'build')));
 
-// Add headers
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'LOCAL') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
+// Add headers before the routes are defined
+app.use(function (req, res, next) {
+    if (process.env.NODE_ENV == 'LOCAL') {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    } else {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+
+    // Pass to next layer of middleware
+    next();
 });
+
 
 mongodb.connection().then((connection) => {
-  if (connection) {
-    router(app);
-    console.log('Database connection connected....');
-  } else {
-    console.log('Database connection failed....');
-  }
 
-  app.get('/', async (req, res) => {
-    res.send('Server Start..........');
-  });
+    //Connection 
+    if (connection == true) {
+        router(app);
+        console.log("Database connection connected....");
+    } else {
+        console.log("Database connection failed....");
+    }
 
-  app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
-  });
+
+    //Get Local Data API 
+    app.get("/", async (req, res) => {
+        res.send("Server Start..........")
+    });
+
+    app.listen(port, () => {
+        console.log(`server start ${port}`);
+    });
 });
+
+

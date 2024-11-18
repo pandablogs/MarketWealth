@@ -1,4 +1,4 @@
-import mongodb from '../../models/mongodb';
+const mongodb = require("../../models/mongodb");
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -31,7 +31,7 @@ const getMainArticle = async () => {
 
             await page.screenshot({ path: 'example.png' });
             const row_elements = await page.evaluate(() => Array.from(document.body.querySelectorAll('.js-stream-content .js-content-viewer'), (data) => data.href));
-
+        
             console.log(row_elements[0]);
             if (row_elements) {
                 await GetNewDetails(row_elements[0]);
@@ -67,7 +67,7 @@ const GetNewDetails = (url) => {
             });
 
             //await scrollPage.pagLoad(page);
-            //  await GetMoreStory(page)
+          //  await GetMoreStory(page)
 
             const row_elements = await page.evaluate(() => Array.from(document.body.querySelectorAll('.caas-title-wrapper'), (data) => data.innerText));
             const row_elements_content = await page.evaluate(() => Array.from(document.body.querySelectorAll('.caas-body'), (data) => data.innerText));
@@ -77,10 +77,10 @@ const GetNewDetails = (url) => {
             const social_twitter = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.twitter"), data => data.href));
             const social_mail = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.mail"), data => data.href));
 
-            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : "";
+            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : ""; 
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
                 contents: row_elements_content,
                 image: (row_elements_img && row_elements_img.length != 0) ? row_elements_img[0] : row_elements_img2[0],
                 link: url,

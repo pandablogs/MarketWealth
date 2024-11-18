@@ -1,44 +1,43 @@
-import cron from 'node-cron';
-import { CronJob } from 'cron';
-import fs from 'fs';
-import path from 'path';
-import request from 'request';
-import mongodb from '../models/mongodb';
-import crawl_cnbc from './cnbc/router';
+const cron = require('node-cron');
+var CronJob = require('cron').CronJob;
+const fs = require('fs');
+const path = require('path');
+var request = require('request');
+const mongodb = require("../models/mongodb");
+const crawl_cnbc = require("./cnbc/router");
 
-// Import Controller
-import crawl_kiplinger from './kiplinger/router';
-import crawl_yahoo from './yahoo/router';
-import crawl_stocknews from './stocknews/router';
-import crawl_marketwatch from './marketwatch/router';
-import nodemailer from 'nodemailer';
-import smtpTransport from 'nodemailer-smtp-transport';
-import { resolve } from 'dns';
-
+//Import Contorller
+const crawl_kiplinger = require('./kiplinger/router');
+const crawl_yahoo = require('./yahoo/router');
+const crawl_stocknews = require('./stocknews/router');
+const crawl_marketwatch = require('./marketwatch/router');
+var nodemailer = require('nodemailer');
+const smtpTransport = require("nodemailer-smtp-transport");
+const { resolve } = require('dns');
 
 async function localfunction(isCron) {
     try {
 
         //Latest News
         await crawl_marketwatch.latestArticle();
-        await deleteDuplicateRecodes('latest_news', 'marketwatch')
+        await deleteDuplicateRecodes('latest_news','marketwatch')
         // News Menu
         await crawl_yahoo.getYahooNews();
         await crawl_cnbc.getNews()
-
-        await deleteDuplicateRecodes('top_news', 'yahoo')
-
+        
+        await deleteDuplicateRecodes('top_news','yahoo')
+        
         // Investing News
         await crawl_kiplinger.getNews();
-        await deleteDuplicateRecodes('investing_news', 'kiplinger',)
+        await deleteDuplicateRecodes('investing_news','kiplinger',)
         //Stock News
         await crawl_stocknews.getMainArticle();
-        await deleteDuplicateRecodes('stock_news', 'stocknews')
+        await deleteDuplicateRecodes('stock_news','stocknews')
 
         //Stock News
         await crawl_marketwatch.getMainArticle();
-        await deleteDuplicateRecodes('main_article_news', 'marketwatch')
-        await deleteDuplicateRecodes('latest_news', 'marketwatch')
+        await deleteDuplicateRecodes('main_article_news','marketwatch')
+        await deleteDuplicateRecodes('latest_news','marketwatch')
 
 
         console.log("All sync completed.")
@@ -110,7 +109,7 @@ if (process.env.NODE_ENV == "Production") {
 
 const main = (app) => {
 
-    app.get("/api/get-dashboard-news", async (req, res) => {
+  app.get("/api/get-dashboard-news", async (req, res) => {
         try {
             //const main_article = await mongodb.items.findOne({ groupType: 'main_article_news', type: 'kiplinger' });
             //  const latest_news = await mongodb.items.find({ groupType: 'latest_news', type: 'kiplinger' }).limit(10).sort({ _id: -1 });;
@@ -118,13 +117,13 @@ const main = (app) => {
             const market_watch_latest_article = await mongodb.items.find({ groupType: 'latest_news', type: 'marketwatch' }).limit(10).sort({ _id: -1 });
 
 
-            const distinct_market_watch_latest_article = market_watch_latest_article
+            const distinct_market_watch_latest_article =market_watch_latest_article
             res.json({
                 status: true,
                 data: {
                     //main_article: main_article,
                     market_watch_main_article,
-                    market_watch_latest_article: distinct_market_watch_latest_article,
+                    market_watch_latest_article:distinct_market_watch_latest_article,
                     latest_news: []
                 }
             });
@@ -412,41 +411,41 @@ const main = (app) => {
 
 }
 
-const deleteDuplicateRecodes = async (groupType, type) => {
-    try {
-        return new Promise(async (resolve, reject) => {
-            const duplicates = await mongodb.items.aggregate([
-                {
-                    $match: {
-                        groupType: groupType,
-                        type: type
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$uuid",  // Replace "uuid" with your actual field name
-                        count: { $sum: 1 },
-                        docs: { $push: "$_id" }  // Collect the document IDs
-                    }
-                },
-                {
-                    $match: {
-                        count: { $gt: 1 }
-                    }
-                }
-            ])
+const deleteDuplicateRecodes = async (groupType,type) =>{
+    try{
+       return  new Promise(async (resolve,reject)=>{
+        const duplicates =await mongodb.items.aggregate([
+            {
+                $match: {
+                    groupType: groupType,
+                    type: type
+                  }
+            },
+            {
+              $group: {
+                _id: "$uuid",  // Replace "uuid" with your actual field name
+                count: { $sum: 1 },
+                docs: { $push: "$_id" }  // Collect the document IDs
+              }
+            },
+            {
+              $match: {
+                count: { $gt: 1 }
+              }
+            }
+          ])
 
-            duplicates.forEach(async duplicate => {
-                // Skip the first document (keep it) and remove the rest
-                const docIdsToRemove = duplicate.docs.slice(1); // Select all but the first ID
-                console.log(docIdsToRemove);
-
-                await mongodb.items.deleteMany({ _id: { $in: docIdsToRemove } });
-            });
-            resolve(true)
+          duplicates.forEach(async duplicate => {
+            // Skip the first document (keep it) and remove the rest
+            const docIdsToRemove = duplicate.docs.slice(1); // Select all but the first ID
+            console.log(docIdsToRemove);
+            
+          await  mongodb.items.deleteMany({ _id: { $in: docIdsToRemove } });
+          });
+          resolve(true)
 
         })
-    } catch (err) {
+    }catch(err){
         resolve(true)
     }
 }

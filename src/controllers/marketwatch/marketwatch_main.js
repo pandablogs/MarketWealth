@@ -1,4 +1,4 @@
-import mongodb from '../../models/mongodb';
+const mongodb = require("../../models/mongodb");
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -157,37 +157,37 @@ const GetDetailsNew = async () => {
     console.log("GetDetailsNew");
 
     const latestData = await mongodb.items.find().sort({ createdAt: -1 }).limit(20);
-    // console.log(latestData);
+   // console.log(latestData);
 
     if (latestData.length) {
-        await mongodb.items.updateOne({ groupType: 'main_article_news' }, { $set: { groupType: 'main_article_news_old' } });
+        await mongodb.items.updateOne({ groupType: 'main_article_news'}, { $set: { groupType: 'main_article_news_old' } });
         const main_article_news = {
             title: latestData[0].title,
             uuid: latestData[0].uuid,
             contents: latestData[0].contents,
-            image: latestData[0].image,
+            image:  latestData[0].image,
             link: latestData[0].link,
             list_contents: latestData[0].list_contents,
-            social_links: latestData[0].social_links,
+            social_links:  latestData[0].social_links,
             type: 'marketwatch',
             groupType: 'main_article_news'
         }
-
+     
         await mongodb.items.create(main_article_news);
         console.log(latestData[0]._id);
 
-        const latest_news = latestData.filter(x => !(x._id == latestData[0]._id)).map(x => ({
+        const latest_news = latestData.filter(x => !(x._id == latestData[0]._id)).map(x=>({
             title: x.title,
             uuid: x.uuid,
             contents: x.contents,
-            image: x.image,
+            image:  x.image,
             link: x.link,
             list_contents: x.list_contents,
-            social_links: x.social_links,
+            social_links:  x.social_links,
             type: 'marketwatch',
             groupType: 'latest_news',
         }))
-        await mongodb.items.remove({ type: 'marketwatch', groupType: 'latest_news' })
+        await mongodb.items.remove({ type: 'marketwatch',groupType: 'latest_news' })
         await mongodb.items.insertMany(latest_news);
     }
 

@@ -1,4 +1,5 @@
-import mongodb from '../../models/mongodb';
+const mongodb = require("../../models/mongodb");
+
 const getLists = async (req, res) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -129,7 +130,7 @@ const GetNewDetails = (url) => {
                 link: url,
                 type: 'kiplinger',
                 groupType: 'latest_news',
-                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
+                uuid : title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
                 list_contents: list_contents,
                 social_links: {
                     facebook: (social_facebook && social_facebook.length != 0) ? social_facebook[0] : "",

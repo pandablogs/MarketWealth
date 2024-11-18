@@ -1,4 +1,4 @@
-import mongodb from '../../models/mongodb';
+const mongodb = require("../../models/mongodb");
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -35,12 +35,12 @@ const getMainArticle = async () => {
             // const profile_info3 = await page.evaluate(() => Array.from(document.querySelectorAll(".pv-text-details__left-panel .text-body-medium"), (data) => data.innerText));
             let CurrentCompanyLog = await page.evaluate(() => Array.from(document.querySelectorAll("section")[5].querySelectorAll('li.artdeco-list__item img'), (data) => data.src));
             let CurrentCompanyInfo = await page.evaluate(() => Array.from(document.querySelectorAll("section")[5].querySelectorAll('li.artdeco-list__item div.pvs-entity  div.display-flex span span'), (data) => data.innerText));
-
+          
             if (CurrentCompanyLog.length == 0) {
                 CurrentCompanyLog = await page.evaluate(() => Array.from(document.querySelectorAll("section")[6].querySelectorAll('li.artdeco-list__item img'), (data) => data.src));
                 CurrentCompanyInfo = await page.evaluate(() => Array.from(document.querySelectorAll("section")[6].querySelectorAll('li.artdeco-list__item div.pvs-entity  div.display-flex span span'), (data) => data.innerText));
             }
-
+            
             const educationlogo = await page.evaluate(() => Array.from(document.querySelectorAll("section")[6].querySelectorAll('li.artdeco-list__item img'), (data) => data.src));
             const educationInfo = await page.evaluate(() => Array.from(document.querySelectorAll("section")[6].querySelectorAll('li.artdeco-list__item div.pvs-entity  div.display-flex span span'), (data) => data.innerText));
             const skill = await page.evaluate(() => Array.from(document.querySelectorAll("section")[8].querySelectorAll('.pvs-list__outer-container ul li .display-flex span.mr1 span'), (data) => data.innerText));
@@ -183,7 +183,7 @@ const GetDetails = (url) => {
 
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
                 contents: [`${sub_title}\n\n${content}`],
                 image: image.replace("image-mobile", "image-desktop"),
                 link: url,
