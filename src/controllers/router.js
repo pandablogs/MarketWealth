@@ -12,7 +12,6 @@ const crawl_yahoo = require('./yahoo/router');
 const crawl_stocknews = require('./stocknews/router');
 const crawl_marketwatch = require('./marketwatch/router');
 var nodemailer = require('nodemailer');
-//const smtpTransport = require("nodemailer-smtp-transport");
 const { resolve } = require('dns');
 
 async function localfunction(isCron) {
