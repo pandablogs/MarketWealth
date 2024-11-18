@@ -1,0 +1,24 @@
+// https://wkhtmltopdf.org/downloads.html
+
+
+// $ heroku buildpacks:clear
+// $ heroku buildpacks:add --index 1 https://github.com/jontewks/puppeteer-heroku-buildpack
+// $ heroku buildpacks:add --index 1 heroku/nodejs
+
+// const browser = await puppeteer.launch({
+//   'args' : [
+//     '--no-sandbox',
+//     '--disable-setuid-sandbox'
+//   ]
+// });
+
+// $ git add .
+// $ git commit -m "Fixing deployment issue"
+// $ git push heroku master
+
+//Ubuntu install
+
+// npm i
+// npm install -g puppeteer --unsafe -perm=true -allow
+// apt-get install chromium -y
+//RUN apt-get update && apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
