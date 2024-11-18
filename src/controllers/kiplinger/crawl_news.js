@@ -1,5 +1,4 @@
-const mongodb = require("../../models/mongodb");
-
+import mongodb from '../../models/mongodb';
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
 }
@@ -145,7 +144,7 @@ const GetNewDetails = (url) => {
             let title = (row_elements && row_elements.length != 0) ? row_elements[0] : "";
             const payload = {
                 title: title,
-                uuid : title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
                 contents: [`${sub_title}\n\n${content}`],
                 image: image.replace("image-mobile", "image-desktop"),
                 link: url,
@@ -160,7 +159,7 @@ const GetNewDetails = (url) => {
                     whatsapp: "",
                 }
             }
-            
+
             console.log(payload)
             browser.close();
             if (payload.title != "" && payload.contents != "" && payload.image != "" && payload.link != "") {

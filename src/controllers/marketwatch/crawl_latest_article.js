@@ -1,4 +1,4 @@
-const mongodb = require("../../models/mongodb");
+import mongodb from '../../models/mongodb';
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -137,10 +137,10 @@ const GetNewDetails = (url) => {
             let image = (polaris_heading_img && polaris_heading_img.length != 0) ? polaris_heading_img[0] : "";
             image = (image && image != "") ? image : (polaris_heading_img_one && polaris_heading_img_one.length != 0) ? polaris_heading_img_one[0] : "";
 
-            let title= (polaris_heading && polaris_heading.length != 0) ? polaris_heading[0] : "";
+            let title = (polaris_heading && polaris_heading.length != 0) ? polaris_heading[0] : "";
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
                 contents: [`${sub_title}\n\n${content}`],
                 image: image.replace("image-mobile", "image-desktop"),
                 link: url,
@@ -157,7 +157,7 @@ const GetNewDetails = (url) => {
             }
 
             console.log(payload)
-            
+
             browser.close();
             if (payload.title != "" && payload.contents != "" && payload.image != "" && payload.link != "") {
                 await mongodb.items.create(payload);

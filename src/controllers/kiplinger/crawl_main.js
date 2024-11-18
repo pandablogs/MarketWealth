@@ -1,5 +1,4 @@
-const mongodb = require("../../models/mongodb");
-
+import mongodb from '../../models/mongodb';
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
 }
@@ -139,7 +138,7 @@ const GetDetails = (url) => {
                 const latestDataId = await mongodb.items.findOne({ groupType: 'main_article_news', type: 'kiplinger' }).select('_id')
                 if (latestDataId) {
                     await mongodb.items.updateOne({ _id: latestDataId._id, }, { $set: { groupType: 'latest_news' } });
-                } 
+                }
                 await mongodb.items.create(payload);
                 browser.close();
                 resolve(true)

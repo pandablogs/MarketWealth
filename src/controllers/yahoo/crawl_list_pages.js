@@ -1,6 +1,5 @@
-const mongodb = require("../../models/mongodb");
-const scrollPage = require('../../utility/scroll_page');
-
+import mongodb from '../../models/mongodb';
+import scrollPage from '../../utility/scroll_page';
 
 const crawl_list_pages = async () => {
     return new Promise(async (resolve, reject) => {
@@ -91,10 +90,10 @@ const GetNewDetails = (url) => {
             const social_twitter = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.twitter"), data => data.href));
             const social_mail = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.mail"), data => data.href));
 
-            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : ""; 
+            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : "";
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
                 contents: row_elements_content,
                 image: (row_elements_img && row_elements_img.length != 0) ? row_elements_img[0] : row_elements_img2[0],
                 link: url,

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const itemsFactory = new mongoose.Schema({
     title: { type: String, required: true },
     uuid: { type: String, required: true },

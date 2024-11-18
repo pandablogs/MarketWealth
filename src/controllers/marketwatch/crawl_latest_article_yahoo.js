@@ -1,4 +1,4 @@
-const mongodb = require("../../models/mongodb");
+import mongodb from '../../models/mongodb';
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -32,7 +32,7 @@ const getLists = async () => {
 
             await page.screenshot({ path: 'example.png' });
             const row_elements = await page.evaluate(() => Array.from(document.body.querySelectorAll('.LatestNews-isHomePage .LatestNews-list .LatestNews-iconCleared'), (data) => data.href));
-        
+
 
             browser.close();
 
@@ -41,7 +41,7 @@ const getLists = async () => {
             let latestList = row_elements.filter(x => !jsonData.some(y => y.link == x));
             console.log("After => ", latestList.length);
             let count = 0;
-           
+
             while (latestList.length > count) {
                 console.log(`count : ${count + 1} | Link : ${latestList[count]}`);
                 await GetNewDetails(latestList[count])
@@ -139,10 +139,10 @@ const GetNewDetails = (url) => {
             let image = (polaris_heading_img && polaris_heading_img.length != 0) ? polaris_heading_img[0] : "";
             image = (image && image != "") ? image : (polaris_heading_img_one && polaris_heading_img_one.length != 0) ? polaris_heading_img_one[0] : "";
 
-            let title= (polaris_heading && polaris_heading.length != 0) ? polaris_heading[0] : "";
+            let title = (polaris_heading && polaris_heading.length != 0) ? polaris_heading[0] : "";
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
                 contents: [`${sub_title}\n\n${content}`],
                 image: image.replace("image-mobile", "image-desktop"),
                 link: url,
@@ -159,7 +159,7 @@ const GetNewDetails = (url) => {
             }
 
             console.log(payload)
-            
+
             browser.close();
             if (payload.title != "" && payload.contents != "" && payload.image != "" && payload.link != "") {
                 await mongodb.items.create(payload);
@@ -270,10 +270,10 @@ const GetNewDetails2 = (url) => {
             const social_twitter = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.twitter"), data => data.href));
             const social_mail = await page.evaluate(() => Array.from(document.querySelectorAll(".caas-share-buttons a.mail"), data => data.href));
 
-            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : ""; 
+            const title = (row_elements && row_elements.length != 0) ? row_elements[0] : "";
             const payload = {
                 title: title,
-                uuid: title.toLocaleLowerCase().replace(/ /g,'-').replace(/[^\w\s-]/gi, ''),
+                uuid: title.toLocaleLowerCase().replace(/ /g, '-').replace(/[^\w\s-]/gi, ''),
                 contents: row_elements_content,
                 image: (row_elements_img && row_elements_img.length != 0) ? row_elements_img[0] : row_elements_img2[0],
                 link: url,
@@ -303,7 +303,7 @@ const GetNewDetails2 = (url) => {
 }
 
 module.exports = {
-    getLists 
+    getLists
 }
 
 // { width: 1920, height: 5080 }

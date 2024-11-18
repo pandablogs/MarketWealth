@@ -1,9 +1,7 @@
 //New UI Update link on 13-10-22
-
-const mongodb = require("../../models/mongodb");
-const moment = require('moment')
-const utility = require("../../utility/scroll_page");
-
+import mongodb from '../../models/mongodb';
+import moment from 'moment';
+import utility from "../../utility/scroll_page";
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
 }

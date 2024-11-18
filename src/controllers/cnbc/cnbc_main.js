@@ -1,4 +1,4 @@
-const mongodb = require("../../models/mongodb");
+import mongodb from '../../models/mongodb';
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
@@ -31,14 +31,14 @@ const onHandler = async () => {
 
 
             await page.screenshot({ path: 'example.png' });
-            const row_elements = await page.evaluate(() => Array.from(document.querySelectorAll(".LatestNews-isHomePage .LatestNews-list .LatestNews-headlineWrapper a" ), (data) => data.href));
-        
+            const row_elements = await page.evaluate(() => Array.from(document.querySelectorAll(".LatestNews-isHomePage .LatestNews-list .LatestNews-headlineWrapper a"), (data) => data.href));
+
 
             browser.close();
 
             console.log("Before => ", row_elements.length);
             const jsonData = await mongodb.items.find({ link: { $in: row_elements } }).select('link');;
-            let latestList = row_elements.filter(x=> (x && x.includes(".html"))).filter(x => !jsonData.some(y => y.link == x));
+            let latestList = row_elements.filter(x => (x && x.includes(".html"))).filter(x => !jsonData.some(y => y.link == x));
             console.log("After => ", latestList.length);
             let count = 0;
             const latestList2 = latestList.slice(0, 10);
@@ -60,7 +60,7 @@ const onHandler = async () => {
 //https://www.cnbc.com/2024/10/29/cnbc-daily-open-stocks-are-approaching-the-hottest-period-of-the-year.html
 const GetDetails = (url) => {
     try {
-       // url = "https://www.cnbc.com/2024/10/29/cnbc-daily-open-stocks-are-approaching-the-hottest-period-of-the-year.html"
+        // url = "https://www.cnbc.com/2024/10/29/cnbc-daily-open-stocks-are-approaching-the-hottest-period-of-the-year.html"
         return new Promise(async (resolve, reject) => {
             const puppeteer = require('puppeteer');
             const browser = await puppeteer.launch({
@@ -76,7 +76,7 @@ const GetDetails = (url) => {
                 height: 4280,
                 deviceScaleFactor: 1
             });
-           // await page.emulateMedia('screen');
+            // await page.emulateMedia('screen');
 
             await page.goto(url, {
                 timeout: 0,
@@ -112,14 +112,14 @@ const GetDetails = (url) => {
             const polaris_heading = await page.evaluate(() => Array.from(document.querySelectorAll("header h1.ArticleHeader-headline"), (data) => data.innerText));
             const polaris_heading_subtitle = await page.evaluate(() => Array.from(document.querySelectorAll(".InlineImage-wrapper .InlineImage-imageEmbedCaption"), (data) => data.innerText));
             const polaris_heading_img = await page.evaluate(() => Array.from(document.querySelectorAll(".InlineImage-imageContainer picture img"), (data) => data.src));
-            const list_contents = await page.evaluate(() =>  Array.from(Array.from(document.querySelector('.ArticleBody-articleBody')?.children || []).filter(childElement=>  (childElement.className == 'group' || childElement.className == 'ArticleBody-subtitle')),(data) => data.innerHTML));
+            const list_contents = await page.evaluate(() => Array.from(Array.from(document.querySelector('.ArticleBody-articleBody')?.children || []).filter(childElement => (childElement.className == 'group' || childElement.className == 'ArticleBody-subtitle')), (data) => data.innerHTML));
             const social_facebook = await page.evaluate(() => Array.from(document.querySelectorAll(".polaris__social a.polaris__social--facebook"), data => data.href));
             const social_twitter = await page.evaluate(() => Array.from(document.querySelectorAll(".polaris__social a.polaris__social--twitter"), data => data.href));
             const social_mail = await page.evaluate(() => Array.from(document.querySelectorAll(".polaris__social a.polaris__social--email"), data => data.href));
             const social_linkedin = await page.evaluate(() => Array.from(document.querySelectorAll(".polaris__social a.polaris__social--linkedin"), data => data.href));
             debugger
-          
-           
+
+
 
             let sub_title = (polaris_heading_subtitle && polaris_heading_subtitle.length != 0) ? polaris_heading_subtitle[0] : "";
             let image = (polaris_heading_img && polaris_heading_img.length != 0) ? polaris_heading_img[0] : "";
@@ -158,5 +158,5 @@ const GetDetails = (url) => {
 }
 
 module.exports = {
-    onHandler 
+    onHandler
 }
